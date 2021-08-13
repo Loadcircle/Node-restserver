@@ -6,7 +6,8 @@ const dbConection = async()=>{
         
         await mongoose.connect(process.env.MONGODB_CNN, {
             useNewUrlParser: true, 
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            useFindAndModify: false,
         });
 
         console.log('conexion realizada');

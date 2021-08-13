@@ -6,14 +6,12 @@ const {
     usersPost, 
     usersDelete 
 } = require('../controllers/users');
-const { isValidRole, isEmailExist } = require('../helpers/db-validator');
+const { isValidRole, isEmailExist, isUserExist } = require('../helpers/db-validator');
 const { validateFields } = require('../middlewares/valdiateFields');
 
 const router = Router();
 
 router.get('/', usersGet);
-
-router.put('/:id', usersPut);
 
 router.post('/', [
     check('email', 'Email format is incorrect').isEmail(),
@@ -23,8 +21,18 @@ router.post('/', [
     // check('role', 'Role is not valid').isIn('ADMIN_ROLE','USER_ROLE'),
     check('role').custom( isValidRole ),
     validateFields
-] , usersPost);
+], usersPost);
 
-router.delete('/', usersDelete);
+router.put('/:id',[
+    check('id', 'ID format is not valid').isMongoId(),
+    check('id').custom(isUserExist),
+    validateFields
+], usersPut);
+
+router.delete('/:id',[
+    check('id', 'ID format is not valid').isMongoId(),
+    check('id').custom(isUserExist),
+    validateFields
+], usersDelete);
 
 module.exports = router;
