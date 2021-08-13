@@ -27,7 +27,7 @@ const usersGet = async (req, res = response)=>{
         users
     });
 }
-
+ 
 const usersPost = async (req, res = response)=>{
     const {name, email, password, role} = req.body;
     const user = new User({name, email, password, role});
