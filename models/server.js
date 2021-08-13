@@ -1,5 +1,6 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
+const { dbConection } = require('../database/config');
 require('dotenv').config();
 
 class Server{
@@ -8,11 +9,17 @@ class Server{
         this.port = process.env.PORT;
         this.usersPath = '/api/users';
 
+        //Connect to DB
+        this.database();
+
         //Middlewares
         this.middlewares();
 
         //Routes
         this.routes();
+    }
+    async database(){
+        await dbConection()
     }
     middlewares(){
         //Public folder
