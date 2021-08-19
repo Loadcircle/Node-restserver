@@ -64,10 +64,13 @@ const googleSignIn = async (req, res) =>{
                 email, 
                 name, 
                 img,
-                password : '',
                 google : true
             }
-            user = new User(data)
+
+            user = new User(data);
+
+            //Save password
+            await user.save();
         }
 
         if(!user.status){            
@@ -85,7 +88,7 @@ const googleSignIn = async (req, res) =>{
             token
         });
     } catch (error) {
-        
+        console.log(error)
         res.status(400).json({
             msg: 'Token invalid',
         });
