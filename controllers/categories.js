@@ -1,15 +1,46 @@
 const {Category} = require('../models')
+
 const categories =  async (req, res)=>{
-    //get public categories
-    res.json({
-        msg: 'Categories get'
-    });
+    const query = {status: true}
+    const {limit = 5, from = 0} = req.query;
+
+    try {
+        const [total, categories] = await Promise.all([
+            Category.countDocuments(query),
+            Category.find(query)
+            .populate('user')
+            .skip(Number(from))
+            .limit(Number(limit)), 
+        ]);
+    
+        //get public categories
+        return res.json({
+            msg: 'Categories get',
+            from,
+            limit,
+            total,
+            categories
+        });
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg: 'Server Error'
+        });
+    }
 }
 
 const category = async (req, res)=>{
-    //get one categorie
+    const {id} = req.params;
+    
+    const category = await Category.findById(id)
+    .populate('user');
+
+    //get one Category
     res.json({
-        msg: 'Categorie get'
+        msg: 'Category get',
+        id,
+        category
     });
 }
 
@@ -44,20 +75,38 @@ const createCategory = async (req, res)=>{
 
 //private TOKEN
 const updateCategory = async (req, res)=>{
-    //Update categorie
+    const name = req.body.name.toUpperCase();
+    const {id} = req.params;
+
+    const data = {
+        name, 
+        user: req.user._id,
+        status: true,
+    }
+
+    const category = await Category.findByIdAndUpdate(id, data, {new: true});
+
+    //Update Category
     res.json({
-        msg: 'updateCategorie put'
+        msg: 'updateCategorie put',
+        category
     });
 }
 
 //private ADMIN ONLY
 const deleteCategory = async (req, res)=>{
-    //Delete categorie
+    const {id} = req.params;
+
+    //Delete User
+    // const user = await User.findByIdAndDelete(id);
+
+    const category = await Category.findByIdAndUpdate(id, {status: false}, {new:true});
+
     res.json({
-        msg: 'deleteCategorie delete'
+        msg: 'deleteCategory - controller',
+        category,
     });
 }
-
 
 module.exports = {
     categories,
