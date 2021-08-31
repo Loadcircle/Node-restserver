@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { dbConection } = require('../database/config');
+const fileUpload = require('express-fileupload');
 require('dotenv').config();
 
 class Server{
@@ -12,6 +13,7 @@ class Server{
         this.categoriesPath = '/api/categories';
         this.productsPath = '/api/products';
         this.searchsPath = '/api/searchs';
+        this.uploadsPath = '/api/uploads';
 
         //Connect to DB
         this.database();
@@ -34,6 +36,13 @@ class Server{
 
         //cors middleware
         this.app.use(cors());
+
+        //File upload middleware
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            createParentPath: true,
+        }));
     }
     routes(){        
         this.app.use(this.authPath, require('../routes/auth'));
@@ -41,6 +50,7 @@ class Server{
         this.app.use(this.categoriesPath, require('../routes/categories'));
         this.app.use(this.productsPath, require('../routes/products'));
         this.app.use(this.searchsPath, require('../routes/searchs'));
+        this.app.use(this.uploadsPath, require('../routes/uploads'));
     }
     listen(){        
         this.app.listen(this.port, ()=>{

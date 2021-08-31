@@ -43,11 +43,20 @@ const isCategoryExistByName = async (name)=>{
     }
 }
 
+const collectionsAllowed = (collection = '', allowedsCollection = [])=>{
+    if(!allowedsCollection.includes(collection)){
+        throw new Error(`Collection ${collection} is not allowed - allowed collections: ${allowedsCollection}`)
+    }
+    //return is required because we're sending extra params to functions, no direct return
+    return true;
+}
+
 module.exports = {
     isValidRole,
     isEmailExist,
     isUserExist,
     isCategoryExist,
     isProductExist,
-    isCategoryExistByName
+    isCategoryExistByName,
+    collectionsAllowed
 }
