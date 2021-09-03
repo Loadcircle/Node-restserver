@@ -2,12 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const { dbConection } = require('../database/config');
 const fileUpload = require('express-fileupload');
+const { socketController } = require('../sockets/controller');
 require('dotenv').config();
 
 class Server{
     constructor(){
         this.app = express();
         this.port = process.env.PORT;
+        this.server = require('http').createServer(this.app);
+        this.io = require('socket.io')(this.server);
+
         this.usersPath = '/api/users';
         this.authPath = '/api/auth';
         this.categoriesPath = '/api/categories';
@@ -23,6 +27,9 @@ class Server{
 
         //Routes
         this.routes();
+
+        //sockets
+        this.sockets();
     }
     async database(){
         await dbConection()
@@ -52,8 +59,11 @@ class Server{
         this.app.use(this.searchsPath, require('../routes/searchs'));
         this.app.use(this.uploadsPath, require('../routes/uploads'));
     }
+    sockets(){
+        this.io.on('connection', (socket)=>socketController(socket, this.io));
+    }
     listen(){        
-        this.app.listen(this.port, ()=>{
+        this.server.listen(this.port, ()=>{
             console.log(`Runnin on port ${this.port}`);
         });
     }

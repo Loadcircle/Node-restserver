@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+</head>
+<body class="container">
+    
+    <div class="row mt-5">
+        <div class="col-sm-6">
+            <h3>Send message</h3>
+            <hr>
+            <input 
+                type="text" 
+                name="txtuid" 
+                id="txtUID" 
+                class="form-control mb-2" 
+                placeholder="ui"
+                autocomplete="off">
+
+            <input 
+                type="text" 
+                name="message" 
+                id="message" 
+                class="form-control mb-2" 
+                placeholder="Message"
+                autocomplete="off">
+            
+            <h3>Users</h3>
+            <hr>
+            <ul id="userList">
+                
+            </ul>
+        </div>
+        <div class="col-sm-6">
+            <h3>Chat</h3>
+            <hr>
+            <ul id="messagesList">
+
+            </ul>
+        </div>
+    </div>
+
+    <button id="logoutBtn" class="btn btn-outline-danger">Logout</button>
+    
+
+
+    <script src="./socket.io/socket.io.js"></script>
+    <script src="./js/chat.js"></script>
+</body>
+</html>
